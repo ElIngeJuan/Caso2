@@ -68,16 +68,17 @@ public class GeneradorReferencias {
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Ingrese el tamaño de página (en bytes): ");
-        int tamPaginaBytes = scanner.nextInt();
-        System.out.print("Ingrese el número de filas de la matriz de datos: ");
-        int NF = scanner.nextInt();
-        System.out.print("Ingrese el número de columnas de la matriz de datos: ");
-        int NC = scanner.nextInt();
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Ingrese el tamaño de página (en bytes): ");
+            int tamPaginaBytes = scanner.nextInt();
+            System.out.print("Ingrese el número de filas de la matriz de datos: ");
+            int NF = scanner.nextInt();
+            System.out.print("Ingrese el número de columnas de la matriz de datos: ");
+            int NC = scanner.nextInt();
 
-        int tamMatriz = Math.max(NF, NC); // Tamaño de la matriz de datos (máximo entre NF y NC)
+            int tamMatriz = Math.max(NF, NC); // Tamaño de la matriz de datos (máximo entre NF y NC)
 
-        generarReferencias(tamPaginaBytes, tamMatriz, NF, NC);
+            generarReferencias(tamPaginaBytes, tamMatriz, NF, NC);
+        }
     }
 }
