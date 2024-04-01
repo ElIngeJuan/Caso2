@@ -2,7 +2,7 @@ TP=16
 NF=4
 NC=4
 NF_NC_Filtro=3
-NR=41
+NR=88
 NP=11
 M[0][0],2,4,R
 F[0][0],0,0,R

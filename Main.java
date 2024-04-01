@@ -13,7 +13,7 @@ public class Main {
             int tamValorBytes = 4; // Tamaño de un valor en las matrices en bytes
 
             // Calcular el número total de registros (NR)
-            int NR = 2 * (NF * NC) + 9; // 3 matrices en total (filtro, datos, resultado)
+            int NR = 2 * ((NF-2) * (NC-2)*9) + 2*(NF-(NF-2))*2*(NC-(NC-2)); // 3 matrices en total (filtro, datos, resultado)
 
             // Calcular el número de páginas necesarias para cada matriz
             int paginasFiltro = (int) Math.ceil((double) NF_NC_Filtro * NF_NC_Filtro * tamValorBytes / tamPaginaBytes);
