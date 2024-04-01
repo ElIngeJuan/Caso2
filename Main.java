@@ -57,10 +57,11 @@ public class Main {
                     }
                     // Aplicar reglas para valores de acumulación
                     if (i > 0 && i < NF && j > 0 && j < NC) {
-                        System.out.println("R1: " + i + " R2: " + j );
+        
                         int posInicialR = NF_NC_Filtro * NF_NC_Filtro * tamValorBytes + NF * NC * tamValorBytes + ((i)* NC +(j)) * tamValorBytes;
                         int paginaR = posInicialR / tamPaginaBytes;
                         int desplazamientoR = posInicialR % tamPaginaBytes;
+                        System.out.println("R1: " + i + " R2: " + j + " R3: " + posInicialR + " R4: " + paginaR + " R5: " + desplazamientoR);
                         archivoSalida.println(String.format("R[%d][%d],%d,%d,W", i, j, paginaR, desplazamientoR));
                     }
                 }
@@ -68,27 +69,23 @@ public class Main {
     
             // Asignar un valor predefinido a los bordes
             for (int i = 0; i < NC; i++) {
-                System.out.println("R1: 0 R2: " + i);
                 int posInicialR = NF_NC_Filtro * NF_NC_Filtro * tamValorBytes + NF * NC * tamValorBytes + (0 * NC + i) * tamValorBytes;
                 int paginaR = posInicialR / tamPaginaBytes;
                 int desplazamientoR = posInicialR % tamPaginaBytes;
                 archivoSalida.println(String.format("R[%d][%d],%d,%d,W", 0, i, paginaR, desplazamientoR));
 
-                System.out.println("R1: " + (NF - 1) + " R2: " + i);
-                int posInicialR1 = NF_NC_Filtro * NF_NC_Filtro * tamValorBytes + NF * NC * tamValorBytes + (i * NC + NF - 1) * tamValorBytes;
+                int posInicialR1 = NF_NC_Filtro * NF_NC_Filtro * tamValorBytes + NF * NC * tamValorBytes + ((NF-1) * NC + i) * tamValorBytes;
                 int paginaR1 = posInicialR1 / tamPaginaBytes;
                 int desplazamientoR1 = posInicialR1 % tamPaginaBytes;
                 archivoSalida.println(String.format("R[%d][%d],%d,%d,W", NF - 1, i, paginaR1, desplazamientoR1));
 
             }
             for (int i = 1; i < NF - 1; i++) {
-                System.out.println("R1: " + i + " R2: 0");
                 int posInicialR = NF_NC_Filtro * NF_NC_Filtro * tamValorBytes + NF * NC * tamValorBytes + (i * NC + 0) * tamValorBytes;
                 int paginaR = posInicialR / tamPaginaBytes;
                 int desplazamientoR = posInicialR % tamPaginaBytes;
                 archivoSalida.println(String.format("R[%d][%d],%d,%d,W", i, 0, paginaR, desplazamientoR));
 
-                System.out.println("R1: " + i + " R2: " + (NC - 1));
                 int posInicialR1 = NF_NC_Filtro * NF_NC_Filtro * tamValorBytes + NF * NC * tamValorBytes + (i * NC + NC - 1) * tamValorBytes;
                 int paginaR1 = posInicialR1 / tamPaginaBytes;
                 int desplazamientoR1 = posInicialR1 % tamPaginaBytes;
