@@ -51,6 +51,8 @@ public class LRU {
         }
     }
 
+    
+
     public void put(int paginaVirtual) {
         if (lruHash.size() == capacidad) {
             int paginaMenosUsada = encontrarPaginaMenosUsada();
