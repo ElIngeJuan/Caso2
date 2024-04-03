@@ -13,7 +13,9 @@ public class ActualizarEnvejecimientoThread extends Thread {
     @Override
     public void run() {
         while (running) {
+
             lru.actualizarEnvejecimientoTodos();
+
         }
     }
 }

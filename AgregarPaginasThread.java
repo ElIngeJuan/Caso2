@@ -21,12 +21,13 @@ public class AgregarPaginasThread extends Thread {
         for (int i = 0; i < referencias.size(); i++) {
             try {
                 Thread.sleep(1);
+
+
                 if ((i+1) % 4 == 0) {
                     lru.SolicitudActualizar();  
                 }
+
                 lru.get(referencias.get(i));
-
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

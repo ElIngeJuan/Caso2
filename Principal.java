@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Principal {
     public static void main(String[] args) {
-        int marcos = 8; // Número de marcos de página
+        int marcos=8; // Número de marcos de página
         Integer np =0; // Número de páginas para envejecimientor
         ArrayList<Integer> referencias = new ArrayList<Integer>();
         try {
