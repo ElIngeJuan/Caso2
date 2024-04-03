@@ -1,34 +1,33 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+
 
 public class LRU {
     private int capacidad;
     private Map<Integer, Integer> lruHash;
     private Map<Integer, List<Integer>> envejecimientoHash;
     private LinkedList<Integer> contadorReferencias;
+    private Boolean actualizando;
     private int fallas;
     private int exitos;
 
-    public LRU(int capacidad) {
+    public LRU(int capacidad,Integer np) {
         this.capacidad = capacidad;
         this.lruHash = new HashMap<>();
         this.envejecimientoHash = new HashMap<>();
         this.contadorReferencias = new LinkedList<>();
         this.fallas = 0;
         this.exitos = 0;
+        this.actualizando = false;
+        initializeEnvejecimiento(np);
+        for(int i=0 ; i<np ; i++){
+            contadorReferencias.add(0);
+        }
     }
 
-    public void setNumPaginasEnvejecimiento(int np) {
-        initializeEnvejecimiento(np);
-    }
+
 
     private void initializeEnvejecimiento(int np) {
         for (int i = 0; i < np; i++) {
@@ -38,36 +37,51 @@ public class LRU {
             }
             envejecimientoHash.put(i, envejecimiento);
         }
+
     }
 
-    public void get(int paginaVirtual) {
+    public synchronized void get(int paginaVirtual) throws InterruptedException {
+        while (actualizando) {
+            wait();
+        }
         if (lruHash.containsKey(paginaVirtual)) {
-            contadorReferencias.add(paginaVirtual);
+            agregarReferencia(paginaVirtual);
             exitos++; 
         } else {
             fallas++; 
-            contadorReferencias.add(paginaVirtual);
+            agregarReferencia(paginaVirtual);
             put(paginaVirtual); 
         }
     }
 
-    
+    public synchronized void agregarReferencia(int paginaVirtual) {
+        while (actualizando) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            
+        }
+        contadorReferencias.set(paginaVirtual, 1);
+        
+    }
 
-    public void put(int paginaVirtual) {
+
+
+
+    public void put(int paginaVirtual) throws InterruptedException {
         if (lruHash.size() == capacidad) {
             int paginaMenosUsada = encontrarPaginaMenosUsada();
             lruHash.remove(paginaMenosUsada);
         }
         lruHash.put(paginaVirtual, paginaVirtual); // Agregar la página al LRU
-        List<Integer> envejecimiento = new LinkedList<>();
-        for (int i = 0; i < 8; i++) {
-            envejecimiento.add(0);
-        }
-        envejecimiento.set(0, 1);
-        envejecimientoHash.put(paginaVirtual, envejecimiento); // Inicializar el envejecimiento a 0
     }
 
-    private int encontrarPaginaMenosUsada() {
+    private synchronized int encontrarPaginaMenosUsada() throws InterruptedException {
+        while (actualizando) {
+            wait();
+        }
         int paginaMenosUsada = -1;
         int minContador = Integer.MAX_VALUE;
         for (Map.Entry<Integer, Integer> entry : lruHash.entrySet()) {
@@ -77,6 +91,7 @@ public class LRU {
                 paginaMenosUsada = entry.getKey();
             }
         }
+        System.out.println("Pagina menos usada: " + paginaMenosUsada);
         return paginaMenosUsada;
     }
 
@@ -88,20 +103,33 @@ public class LRU {
         return decimal;
     }
 
-    public void actualizarEnvejecimientoTodos() {
-        for (Map.Entry<Integer, List<Integer>> entry : envejecimientoHash.entrySet()) {
-            int paginaVirtual = entry.getKey();
-            actualizarEnvejecimiento(paginaVirtual);
+    public synchronized void actualizarEnvejecimientoTodos() {
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        contadorReferencias.clear(); // Limpiar el contador después de actualizar el envejecimiento
+        actualizando = true;
+        for (int i = 0; i < contadorReferencias.size(); i++) {
+            int estado = contadorReferencias.get(i);
+
+            actualizarEnvejecimiento(i, estado);
+            contadorReferencias.set(i, 0);
+        }
+
+
+        actualizando = false;
+        notify();
+        
     }
     
-    private void actualizarEnvejecimiento(int paginaVirtual) {
+    public synchronized void SolicitudActualizar(){
+        notify();
+    }
+    
+    
+    private void actualizarEnvejecimiento(int paginaVirtual, int estado) {
         List<Integer> envejecimiento = envejecimientoHash.get(paginaVirtual);
-        int estado = 0;
-        if (contadorReferencias.contains(paginaVirtual)) {
-            estado = 1; 
-        }
         for (int i = envejecimiento.size() - 1; i > 0; i--) {
             envejecimiento.set(i, envejecimiento.get(i - 1));
         }
@@ -116,6 +144,8 @@ public class LRU {
     public int getNumExitos() {
         return exitos;
     }
+
+
 
     }
     
