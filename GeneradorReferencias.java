@@ -1,11 +1,10 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 
-public class Main {
+public class GeneradorReferencias {
 
-    public static void generarReferencias(int tamPaginaBytes, int tamMatriz, int NF, int NC){
+    public void generarReferencias(int tamPaginaBytes, int tamMatriz, int NF, int NC){
          try {
             PrintWriter archivoSalida = new PrintWriter(new FileWriter("referencias.txt"));
 
@@ -61,7 +60,6 @@ public class Main {
                         int posInicialR = NF_NC_Filtro * NF_NC_Filtro * tamValorBytes + NF * NC * tamValorBytes + ((i)* NC +(j)) * tamValorBytes;
                         int paginaR = posInicialR / tamPaginaBytes;
                         int desplazamientoR = posInicialR % tamPaginaBytes;
-                        System.out.println("R1: " + i + " R2: " + j + " R3: " + posInicialR + " R4: " + paginaR + " R5: " + desplazamientoR);
                         archivoSalida.println(String.format("R[%d][%d],%d,%d,W", i, j, paginaR, desplazamientoR));
                     }
                 }
@@ -101,19 +99,5 @@ public class Main {
 
     }
 
-    public static void main(String[] args) {
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("Ingrese el tamaño de página (en bytes): ");
-            int tamPaginaBytes = scanner.nextInt();
-            System.out.print("Ingrese el número de filas de la matriz de datos: ");
-            int NF = scanner.nextInt();
-            System.out.print("Ingrese el número de columnas de la matriz de datos: ");
-            int NC = scanner.nextInt();
-
-            int tamMatriz = Math.max(NF, NC); // Tamaño de la matriz de datos (máximo entre NF y NC)
-
-            generarReferencias(tamPaginaBytes, tamMatriz, NF, NC);
-        }
-    }
 
 }

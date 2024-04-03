@@ -4,13 +4,58 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Principal {
+
     public static void main(String[] args) {
-        int marcos=8; // Número de marcos de página
+        Scanner scanner = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("Menú:");
+            System.out.println("1. Generación de referencias");
+            System.out.println("2. Calcular datos de paginación");
+            System.out.println("3. Salir");
+            System.out.print("Seleccione una opción: ");
+            opcion = scanner.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    GeneradorReferencias generadorReferencias = new GeneradorReferencias();
+                    System.out.print("Ingrese el tamaño de página (en bytes): ");
+                    int tamPaginaBytes = scanner.nextInt();
+                    System.out.print("Ingrese el número de filas de la matriz de datos: ");
+                    int NF = scanner.nextInt();
+                    System.out.print("Ingrese el número de columnas de la matriz de datos: ");
+                    int NC = scanner.nextInt();
+        
+                    int tamMatriz = Math.max(NF, NC); // Tamaño de la matriz de datos (máximo entre NF y NC)
+        
+                    generadorReferencias.generarReferencias(tamPaginaBytes, tamMatriz, NF, NC);
+                    break;
+                case 2:
+                    System.out.print("Ingrese el número de marcos: ");
+                    int marcos = scanner.nextInt();
+                    System.out.print("Ingrese la ruta del archivo de referencias: ");
+                    String rutaArchivoReferencias = scanner.next();
+                    calcularDatosPaginacion(marcos, rutaArchivoReferencias);
+                    break;
+                case 3:
+                    System.out.println("Saliendo del programa...");
+                    break;
+                default:
+                    System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
+            }
+        } while (opcion != 3);
+
+}   
+
+
+    public static void calcularDatosPaginacion(Integer marcos, String rutaArchivoReferencias){
         Integer np =0; // Número de páginas para envejecimientor
         ArrayList<Integer> referencias = new ArrayList<Integer>();
+        Integer nr = 0; // Número de registros
         try {
             // Cambiar la ruta del archivo según sea necesario
-            File file = new File("referencias.txt");
+            File file = new File(rutaArchivoReferencias);
             Scanner scanner = new Scanner(file);
 
             // Leer el archivo línea por línea
@@ -23,6 +68,9 @@ public class Principal {
                     referencias.add(paginaVirtual);
                 } else if (line.startsWith("NP=")) {
                     np = Integer.parseInt(line.substring(3));
+                }else if (line.startsWith("NR")) {
+                    nr = Integer.parseInt(line.substring(3));
+                    
                 }
 
             }
@@ -54,5 +102,8 @@ public class Principal {
         // Imprimir resultados finales
         System.out.println("Fallas de página: " + lru.getNumFallas());
         System.out.println("Éxitos de página: " + lru.getNumExitos());
+        System.out.println("Tiempo de ejecución: (hits * 30) ns + (misses * 10000000) ns = " + lru.getNumExitos()*30 + " + " + lru.getNumFallas()*10000000 + " = " + (lru.getNumExitos()*30 + lru.getNumFallas()*10000000) + " ns");
+        System.out.println("Tiempo si todo fuera fallos: " + nr*10000000 + " ns");
+        System.out.println("Tiempo si todo fuera hits: " + nr*30 + " ns");
     }
 }
