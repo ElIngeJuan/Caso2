@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Principal {
     public static void main(String[] args) {
         int marcos = 8; // Número de marcos de página
-        Integer np = 0; // Número de páginas para envejecimientor
+        Integer np =0; // Número de páginas para envejecimientor
         ArrayList<Integer> referencias = new ArrayList<Integer>();
         try {
             // Cambiar la ruta del archivo según sea necesario
@@ -49,5 +49,10 @@ public class Principal {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
+        // Imprimir resultados finales
+        System.out.println("Fallas de página: " + lru.getNumFallas());
+        System.out.println("Éxitos de página: " + lru.getNumExitos());
     }
 }

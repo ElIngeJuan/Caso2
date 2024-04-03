@@ -91,7 +91,6 @@ public class LRU {
                 paginaMenosUsada = entry.getKey();
             }
         }
-        System.out.println("Pagina menos usada: " + paginaMenosUsada);
         return paginaMenosUsada;
     }
 
@@ -110,10 +109,12 @@ public class LRU {
             e.printStackTrace();
         }
         actualizando = true;
+
         for (int i = 0; i < contadorReferencias.size(); i++) {
             int estado = contadorReferencias.get(i);
 
             actualizarEnvejecimiento(i, estado);
+
             contadorReferencias.set(i, 0);
         }
 
@@ -149,4 +150,3 @@ public class LRU {
 
     }
     
-

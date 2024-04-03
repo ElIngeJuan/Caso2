@@ -20,11 +20,13 @@ public class AgregarPaginasThread extends Thread {
         actualizarEnvejecimientoThread.start();
         for (int i = 0; i < referencias.size(); i++) {
             try {
-                lru.get(referencias.get(i));
-
+                Thread.sleep(1);
                 if ((i+1) % 4 == 0) {
                     lru.SolicitudActualizar();  
                 }
+                lru.get(referencias.get(i));
+
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
