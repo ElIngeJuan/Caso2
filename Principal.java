@@ -100,8 +100,13 @@ public class Principal {
 
 
         // Imprimir resultados finales
-        System.out.println("Fallas de página: " + lru.getNumFallas());
-        System.out.println("Éxitos de página: " + lru.getNumExitos());
+        int totalReferencias = lru.getNumFallas() + lru.getNumExitos();
+        double porcentajeFallas = (double) lru.getNumFallas() / totalReferencias * 100;
+        double porcentajeExitos = (double) lru.getNumExitos() / totalReferencias * 100;
+        
+        System.out.println("Fallas de página: " + lru.getNumFallas() + " (" + String.format("%.2f", porcentajeFallas) + "%)");
+        System.out.println("Éxitos de página: " + lru.getNumExitos() + " (" + String.format("%.2f", porcentajeExitos) + "%)");
+        
         System.out.println("Tiempo de ejecución: (hits * 30) ns + (misses * 10000000) ns = " + lru.getNumExitos()*30 + " + " + lru.getNumFallas()*10000000 + " = " + (lru.getNumExitos()*30 + lru.getNumFallas()*10000000) + " ns");
         System.out.println("Tiempo si todo fuera fallos: " + nr*10000000 + " ns");
         System.out.println("Tiempo si todo fuera hits: " + nr*30 + " ns");
